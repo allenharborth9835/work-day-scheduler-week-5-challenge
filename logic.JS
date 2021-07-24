@@ -54,11 +54,9 @@ function createTimeblocks(){
         $(timeEl).append(titleEl);
 
         let taskEl = document.createElement("div");
-        let inputEl = document.createElement("p");
-        $(taskEl).append(inputEl)
         $(timeEl).append(taskEl);
 
-        $(taskEl).on("click", inputEl, function(){
+        $(taskEl).on("click", function(){
             var text = $(this)
                 .text()
                 .trim();
@@ -73,7 +71,13 @@ function createTimeblocks(){
         $(scheduleBtn).addClass("col-1 oi oi-hard-drive saveBtn");
         $(timeEl).append(scheduleBtn);
         $(scheduleBtn).on("click", taskEl, function(){
-            
+            var text = $(taskEl).siblings("textarea")
+                .text()
+                .trim();
+            var textInput = $("<div>")
+                .val(text);
+            console.log(taskEl);
+            $(taskEl).replaceWith(textInput)         
         })
         taskEl = auditTime(timeId, taskEl);
 
