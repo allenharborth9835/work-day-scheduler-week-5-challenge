@@ -72,7 +72,9 @@ function createTimeblocks(){
         let scheduleBtn = document.createElement("button");
         $(scheduleBtn).addClass("col-1 oi oi-hard-drive saveBtn");
         $(timeEl).append(scheduleBtn);
-        
+        $(scheduleBtn).on("click", taskEl, function(){
+            
+        })
         taskEl = auditTime(timeId, taskEl);
 
         $("#timeBlocks").append(timeEl);
