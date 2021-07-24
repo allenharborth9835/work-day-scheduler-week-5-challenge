@@ -18,27 +18,68 @@ function createTimeId(lastTimeID, titleEl){
     return titleEl;
 }
 
+function auditTime(timeBlock, taskEl){
+    pastHour=timeBlock+1;
+    var time = moment(pastHour.toString(), "LT");
+    if(moment().isAfter(time)){
+        $(taskEl).addClass("col-10 past");
+    }else if(Math.abs(moment().diff(time, "hours"))<1){
+        $(taskEl).addClass("col-10 present");
+    }else{
+        $(taskEl).addClass("col-10 future");
+    }
+    return taskEl;
+}
+function editTask(){
+    var text = $(this)
+        .text()
+        .trim();
+    var textInput =$("<textarea>")
+        .addClass("form-control")
+        .val(text);
+    $(this).replaceWith(textInput);
+    textInput.trigger("focus");
+}
+
+
 function createTimeblocks(){
     for(var block = 0; block<11;block++){
+        timeId = startTime + block;
         let timeEl = document.createElement("div");
         $(timeEl).addClass("row");
 
         let titleEl = document.createElement("div");
         $(titleEl).addClass("col-1 hour");
-        titleEl = createTimeId(startTime, titleEl);
+        titleEl = createTimeId(timeId, titleEl);
         $(timeEl).append(titleEl);
 
         let taskEl = document.createElement("div");
-        $(taskEl).addClass("col-10 past");
-        taskEl.append("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+        let inputEl = document.createElement("p");
+        $(taskEl).append(inputEl)
         $(timeEl).append(taskEl);
+
+        $(taskEl).on("click", inputEl, function(){
+            var text = $(this)
+                .text()
+                .trim();
+            var textInput = $("<textarea>")
+                .val(text);
+            $(this).replaceWith(textInput);
+            textInput.trigger("focus");
+        });
+        
 
         let scheduleBtn = document.createElement("button");
         $(scheduleBtn).addClass("col-1 oi oi-hard-drive saveBtn");
         $(timeEl).append(scheduleBtn);
+        
+        taskEl = auditTime(timeId, taskEl);
 
         $("#timeBlocks").append(timeEl);
-        startTime++;
+        timeId++;
     }
+    
 }
+
 createTimeblocks();
+
