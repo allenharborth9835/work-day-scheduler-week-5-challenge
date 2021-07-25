@@ -2,6 +2,7 @@ let currentDate = moment().format('MMMM Do YYYY, h:mm a');
 let currentTime = moment().format('LT');
 let startTime = 7;
 let isMorning = true;
+let taskArr = []
 
 $("#currentDay").append("<h1>"+moment().format('dddd') +"</h1>");
 $("#currentDay").append(currentDate);
@@ -18,9 +19,9 @@ function createTimeId(lastTimeID, titleEl){
     return titleEl;
 }
 
-function auditTime(timeBlock, taskEl){
-    pastHour=timeBlock+1;
-    var time = moment(pastHour.toString(), "LT");
+function auditTime(timeId, taskEl){
+    pastHour=timeId;
+    let time = moment(pastHour.toString(), "LT") ;
     if(moment().isAfter(time)){
         $(taskEl).addClass("col-10 past");
     }else if(Math.abs(moment().diff(time, "hours"))<1){
@@ -30,20 +31,33 @@ function auditTime(timeBlock, taskEl){
     }
     return taskEl;
 }
-function editTask(){
-    var text = $(this)
-        .text()
-        .trim();
-    var textInput =$("<textarea>")
-        .addClass("form-control")
-        .val(text);
-    $(this).replaceWith(textInput);
-    textInput.trigger("focus");
-}
 
+function saveTasks(timeId, task){
+    let taskInfo = {
+        time: timeId,
+        taskDes: task
+    }
+    taskArr.push(taskInfo)
+    localStorage.setItem("scheduledTask", JSON.stringify(taskArr))
+}
+function loadTask(timeBlock, taskEl){
+    savedTasks = localStorage.getItem("scheduledTask");
+    if(!(savedTasks==null)){
+        savedTasks = JSON.parse(savedTasks);
+        savedTasks.forEach(task=>{
+            console.log(task.time)
+            if(timeBlock === task.time){
+                taskEl.append(task.taskDes);
+            };
+        
+        });
+    };
+    return taskEl;
+};
 
 function createTimeblocks(){
-    for(var block = 0; block<11;block++){
+    //localStorage.removeItem("scheduledTask");
+    for(let block = 0; block<11;block++){
         timeId = startTime + block;
         let timeEl = document.createElement("div");
         $(timeEl).addClass("row");
@@ -53,39 +67,48 @@ function createTimeblocks(){
         titleEl = createTimeId(timeId, titleEl);
         $(timeEl).append(titleEl);
 
-        let taskEl = document.createElement("div");
+        taskEl = document.createElement("div");
+        taskEl = loadTask($(titleEl).text(), taskEl);
+        $(taskEl).addClass("task")
         $(timeEl).append(taskEl);
-
-        $(taskEl).on("click", function(){
-            var text = $(this)
-                .text()
-                .trim();
-            var textInput = $("<textarea>")
-                .val(text);
-            $(this).replaceWith(textInput);
-            textInput.trigger("focus");
-        });
         
-
-        let scheduleBtn = document.createElement("button");
+        scheduleBtn = document.createElement("button");
         $(scheduleBtn).addClass("col-1 oi oi-hard-drive saveBtn");
         $(timeEl).append(scheduleBtn);
-        $(scheduleBtn).on("click", taskEl, function(){
-            var text = $(taskEl).siblings("textarea")
-                .text()
-                .trim();
-            var textInput = $("<div>")
-                .val(text);
-            console.log(taskEl);
-            $(taskEl).replaceWith(textInput)         
-        })
-        taskEl = auditTime(timeId, taskEl);
 
+        taskEl = auditTime(timeId, taskEl);
+        
         $("#timeBlocks").append(timeEl);
-        timeId++;
     }
     
 }
 
 createTimeblocks();
 
+$(".task").on("click", function(){
+    let text = $(this)
+        .text()
+        .trim();
+    let textInput = $("<textarea>")
+        .val(text);
+    $(this).replaceWith(textInput);
+    textInput.trigger("focus");
+});
+
+$(".saveBtn").on("click", function(){
+    let timeId = $(this).siblings(".hour").text();
+    let taskTime = parseInt($(this).siblings(".hour").text().substring(0,2));
+    if($(this).siblings(".hour").text().charAt(2)==="p")
+        taskTime+=12;
+    
+    let text = $(this).siblings("textarea")
+        .val()
+        .trim();
+    let taskEl = $("<div>")
+        .text(text);
+        taskEl = auditTime(taskTime, taskEl);
+    $(taskEl).addClass("task");
+    $(this).siblings("textarea").replaceWith(taskEl);
+    console.log("test");
+    saveTasks(timeId, text);
+});
