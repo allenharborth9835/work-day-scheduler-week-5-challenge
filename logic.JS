@@ -34,6 +34,7 @@ function auditTime(timeId, taskEl){
 
 function saveTasks(timeId, task){
     let taskInfo = {
+        date: moment(),
         time: timeId,
         taskDes: task
     }
@@ -46,7 +47,7 @@ function loadTask(timeBlock, taskEl){
         savedTasks = JSON.parse(savedTasks);
         savedTasks.forEach(task=>{
             console.log(task.time)
-            if(timeBlock === task.time){
+            if((timeBlock === task.time)&(timeBlock.date === moment())){
                 taskEl.append(task.taskDes);
             };
         
@@ -56,7 +57,6 @@ function loadTask(timeBlock, taskEl){
 };
 
 function createTimeblocks(){
-    //localStorage.removeItem("scheduledTask");
     for(let block = 0; block<11;block++){
         timeId = startTime + block;
         let timeEl = document.createElement("div");
@@ -84,7 +84,6 @@ function createTimeblocks(){
 }
 
 createTimeblocks();
-
 
 $(".saveBtn").on("click", function(){
     let timeId = $(this).siblings(".hour").text();
