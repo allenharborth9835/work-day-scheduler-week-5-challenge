@@ -34,7 +34,7 @@ function auditTime(timeId, taskEl){
 
 function saveTasks(timeId, task){
     let taskInfo = {
-        date: moment(),
+        date: moment().format('l'),
         time: timeId,
         taskDes: task
     }
@@ -45,9 +45,9 @@ function loadTask(timeBlock, taskEl){
     savedTasks = localStorage.getItem("scheduledTask");
     if(!(savedTasks==null)){
         savedTasks = JSON.parse(savedTasks);
+        taskArr=savedTasks
         savedTasks.forEach(task=>{
-            console.log(task.time)
-            if((timeBlock === task.time)&(timeBlock.date === moment())){
+            if((timeBlock === task.time)&(task.date === moment().format('l'))){
                 taskEl.append(task.taskDes);
             };
         
