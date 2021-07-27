@@ -67,7 +67,7 @@ function createTimeblocks(){
         titleEl = createTimeId(timeId, titleEl);
         $(timeEl).append(titleEl);
 
-        taskEl = document.createElement("div");
+        taskEl = document.createElement("textarea");
         taskEl = loadTask($(titleEl).text(), taskEl);
         $(taskEl).addClass("task")
         $(timeEl).append(taskEl);
@@ -85,15 +85,6 @@ function createTimeblocks(){
 
 createTimeblocks();
 
-$(".task").on("click", function(){
-    let text = $(this)
-        .text()
-        .trim();
-    let textInput = $("<textarea>")
-        .val(text);
-    $(this).replaceWith(textInput);
-    textInput.trigger("focus");
-});
 
 $(".saveBtn").on("click", function(){
     let timeId = $(this).siblings(".hour").text();
@@ -104,7 +95,7 @@ $(".saveBtn").on("click", function(){
     let text = $(this).siblings("textarea")
         .val()
         .trim();
-    let taskEl = $("<div>")
+    let taskEl = $("<textarea>")
         .text(text);
         taskEl = auditTime(taskTime, taskEl);
     $(taskEl).addClass("task");
