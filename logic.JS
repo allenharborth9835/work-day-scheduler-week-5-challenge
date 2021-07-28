@@ -1,12 +1,12 @@
 let currentDate = moment().format('MMMM Do YYYY, h:mm a');
-let currentTime = moment().format('LT');
+let currentDay = moment().format('dddd')
 //create varibles for start time of task 
 //and boolean to see if it is in the morning
 let startTime = 7;
 let isMorning = true;
 let taskArr = []
 
-$("#currentDay").append("<h1>"+moment().format('dddd') +"</h1>");
+$("#currentDay").append("<h1>"+currentDay +"</h1>");
 $("#currentDay").append(currentDate);
 
 //create a time id for the block
@@ -109,20 +109,28 @@ createTimeblocks();
 
 //click action to save task
 $(".saveBtn").on("click", function(){
+    //pull in sibling task of button
     let timeId = $(this).siblings(".hour").text();
+    //pull in task time from id
     let taskTime = parseInt($(this).siblings(".hour").text().substring(0,2));
+    //turn into military time
     if($(this).siblings(".hour").text().charAt(2)==="p"){
         taskTime+=12;
     };
+    //pull in text input
     let text = $(this).siblings("textarea")
         .val()
         .trim();
+    //set text to input
     let taskEl = $("<textarea>")
         .text(text);
+    //add class to color background
     taskEl = auditTime(taskTime, taskEl);
+    //add task class
     $(taskEl).addClass("task");
+    //replace with new text area
     $(this).siblings("textarea").replaceWith(taskEl);
-    console.log("test");
+    //save new task
     saveTasks(timeId, text);
 });
 
