@@ -4,9 +4,9 @@ This project was really interesting. I started it out by creating a variable for
 ## Lessons Learned
 one thing this lesson reinforced was using javascript to create repetitive html elements instead of hard coding them into the page. I learned how to use the sibling function in jquery to get the info of a row that's already made and change elements with the sibling function. The lesson really reinforced separating blocks in different functions to simplify code. I learned how to use moments to keep track of dates and time and also the use of third party API's. I got more experience with bootstrap and jquery for better functionality.
 ## Screenshots
-![App Screenshot]()
+![App Screenshot](tasksched-image.JPG)
 
 ## Documentation
 
-[GitHub Repo]()
-[Live Page on Github]()
+[GitHub Repo](https://github.com/allenharborth9835/work-day-scheduler-week-5-challenge)
+[Live Page on Github](https://allenharborth9835.github.io/work-day-scheduler-week-5-challenge/)
